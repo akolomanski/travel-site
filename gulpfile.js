@@ -4,7 +4,9 @@ postcss = require('gulp-postcss'),
 autoprefixer = require('autoprefixer'),
 cssvars = require('postcss-simple-vars'),
 nested = require('postcss-nested'),
-cssImport = require('postcss-import');
+cssImport = require('postcss-import'),
+browserSync = require('browser-sync').create(),
+mixins = require('postcss-mixins');
 
 
 async function print(){
@@ -13,15 +15,20 @@ async function print(){
 } 
 
 function html(cb){
-    console.log("imagine all the htmls")
+    browserSync.reload();
     cb();
 }
 
 function styles(){
     return src(cssFiles)
-    .pipe(postcss([cssImport, cssvars, nested, autoprefixer]))
-    .pipe(dest('app/temp/styles')
-    );
+    .pipe(postcss([cssImport, mixins, cssvars, nested, autoprefixer]))
+    .pipe(dest('app/temp/styles'));
+}
+
+function cssInject(){
+    return src('app/temp/styles/style.css')
+        .pipe(browserSync.stream());
+    
 }
 
 
@@ -29,7 +36,14 @@ function styles(){
 
 
 exports.default = function (){
+
+    browserSync.init({
+        server:{
+            baseDir: "app"
+        }
+    });
+
     watch(['app/index.html'], html);
-    watch(['app/styles/**/*.css'], styles);
+    watch(['app/styles/**/*.css'], series(styles, cssInject));
 };
 exports.haha = series(html);
