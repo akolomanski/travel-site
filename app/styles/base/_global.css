@@ -8,6 +8,10 @@ img{
     height: auto;
 }
 
+a{
+    color: $mainOrange;
+}
+
 *{
     box-sizing: border-box;
 }
