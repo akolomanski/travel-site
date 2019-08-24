@@ -1,0 +1,16 @@
+/*Do not edit directly. Instead edit gulp/templates/sprite.css */
+
+{{#shapes}}
+
+    {{#first}}
+        .icon{
+            background-image: url('app/assets/images/sprites/{{{sprite}}}');
+        }
+    {{/first}}
+
+    .icon--{{base}} {
+        width: {{width.outer}}px;
+        height: {{height.outer}}px;
+        background-position: {{position.relative.xy}}; 
+    }
+{{/shapes}}
