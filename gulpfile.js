@@ -8,6 +8,7 @@ cssImport = require('postcss-import'),
 browserSync = require('browser-sync').create(),
 mixins = require('postcss-mixins'),
 rename = require('gulp-rename'),
+del = require('del'),
 svgSprite = require('gulp-svg-sprite'),
 config = {
     mode:{
@@ -23,10 +24,13 @@ config = {
 };
 
 
-async function print(){
-    
-    return await Promise.resolve(console.log("It Works!"));
-} 
+function beginClean (){
+    return del(['./app/temp/sprite', './app/assets/images/sprites']);
+}
+
+function endClean (){
+    return del(['./app/temp/sprite']);
+}
 
 function html(cb){
     browserSync.reload();
@@ -78,4 +82,4 @@ exports.default = function (){
 };
 exports.createSprite = createSprite;
 exports.copySpriteCSS = copySpriteCSS;
-exports.icons = series(createSprite, parallel(copySpriteGraphic, copySpriteCSS));
+exports.icons = series(beginClean, createSprite, parallel(copySpriteGraphic, copySpriteCSS), endClean);
