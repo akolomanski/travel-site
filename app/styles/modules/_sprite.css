@@ -1,9 +1,9 @@
 /*Do not edit directly. Instead edit gulp/templates/sprite.css */
 
 
-        .icon{
-            background-image: url('app/assets/images/sprites/sprite-172298e6.svg');
-        }
+    .icon{
+        background-image: url('/assets/images/sprites/sprite-172298e6.svg');
+    }
 
     .icon--clear-view-escapes {
         width: 142.4px;
