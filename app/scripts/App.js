@@ -1,7 +1,4 @@
-import Person from "./modules/Person";
+import MobileMenu from "./modules/MobileMenu";
 
-const john = new Person("Jon Doe", "Blue");
-john.greet();
 
-const jane = new Person("Jane Smith", "Orange");
-jane.greet();
+const mobileMenu = new MobileMenu();
