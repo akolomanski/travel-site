@@ -8,7 +8,9 @@ cssImport = require('postcss-import'),
 browserSync = require('browser-sync').create(),
 mixins = require('postcss-mixins'),
 rename = require('gulp-rename'),
+hexrgba = require('postcss-hexrgba'),
 del = require('del'),
+webpack = require('webpack'),
 svgSprite = require('gulp-svg-sprite'),
 config = {
     mode:{
@@ -39,8 +41,23 @@ function html(cb){
 
 function styles(){
     return src(cssFiles)
-        .pipe(postcss([cssImport, mixins, cssvars, nested, autoprefixer]))
+        .pipe(postcss([cssImport, mixins, cssvars, nested, hexrgba, autoprefixer]))
         .pipe(dest('app/temp/styles'));
+}
+
+function scripts(cb){
+    webpack(require('./webpack.config'), (err, stats)=>{
+        if(err){
+            console.log(err.toString());
+        }
+        console.log(stats.toString());
+        cb();
+    });
+}
+
+function scriptsRefresh(cb){
+    browserSync.reload();
+    cb();
 }
 
 function cssInject(){
@@ -79,6 +96,7 @@ exports.default = function (){
 
     watch(['app/index.html'], html);
     watch(['app/styles/**/*.css'], series(styles, cssInject));
+    watch(['app/scripts/**/*.js'], series(scripts, scriptsRefresh));
 };
 exports.createSprite = createSprite;
 exports.copySpriteCSS = copySpriteCSS;
