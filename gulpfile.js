@@ -14,6 +14,11 @@ webpack = require('webpack'),
 svg2png = require('gulp-svg2png'),
 modernizr = require('gulp-modernizr'),
 svgSprite = require('gulp-svg-sprite'),
+imageMin = require('gulp-imagemin'),
+usemin = require('gulp-usemin'),
+cssnano = require('gulp-cssnano'),
+rev = require('gulp-rev'),
+uglify = require('gulp-uglify'),
 config = {
     shape: {
         spacing: {
@@ -114,6 +119,45 @@ function modernizer (){
         .pipe(dest('./app/temp/scripts'));
 }
 
+function deletedocsFolder(){
+    return del("./docs");
+}
+
+function copyGeneralFiles(){
+    const pathsToCopy = [
+        "./app/**/*",
+         "!./app/index.html",
+         "!./app/assets/images/**",
+         "!./app/styles/**",
+         "!./app/scripts/**",
+         "!./app/temp",
+         "!./app/temp/**"
+    ]
+
+    return src(pathsToCopy)
+        .pipe(dest("./docs"));
+}
+
+function optimizeImages (){
+    return src(['./app/assets/images/**/*', '!./app/assets/images/icons', '!./app/assets/images/icons/**/*'])
+        .pipe(imageMin({
+            progressive: true,
+            interlaced: true,
+            multipass: true
+        }))
+        .pipe(dest("./docs/assets/images"));
+}
+
+function useMin (){
+    return src("./app/index.html")
+        .pipe(usemin({
+            css: [function(){return rev()}, function(){return cssnano()}],
+            js:[function(){return rev()}, function(){return uglify()}]
+        }))
+        .pipe(dest("./docs"));
+}
+
+
 
 
 exports.default = function (){
@@ -132,3 +176,12 @@ exports.createSprite = createSprite;
 exports.copySpriteCSS = copySpriteCSS;
 exports.icons = series(beginClean, createSprite, createPngCopy, parallel(copySpriteGraphic, copySpriteCSS), endClean);
 exports.modernizr = modernizer;
+exports.build = series(deletedocsFolder,parallel(series(beginClean, createSprite, createPngCopy, parallel(copySpriteGraphic, copySpriteCSS), endClean), styles, scripts), parallel(optimizeImages, useMin, copyGeneralFiles));
+exports.previewDist = function(){
+    browserSync.init({
+        server:{
+            baseDir: "docs"
+        }
+    });
+}
+ 
