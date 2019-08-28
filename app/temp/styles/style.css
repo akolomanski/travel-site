@@ -1149,7 +1149,7 @@ a{
 @media(min-width: 800px){
 
 .site-header__menu-content{
-            display: 1;
+            opacity: 1;
             z-index: 1;
             padding-top: 0;
             transform: scale(1)
@@ -1235,4 +1235,15 @@ a{
             font-size: 1rem;
             background-color: transparent
     }
+    }
+
+.reveal-item{
+    opacity: 0;
+    transition: all 1.5s ease-out;
+    transform: scale(1.15);
+}
+
+.reveal-item--is-visible{
+        opacity: 1;
+        transform: scale(1);
     }
