@@ -18,7 +18,7 @@
   "homepage": "https://github.com/akolomanski/travel-site#readme",
   "dependencies": {
     "braces": "^3.0.2",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "jquery-smooth-scroll": "^2.2.0",
     "lazysizes": "^5.1.1",
     "normalize.css": "^8.0.1",
